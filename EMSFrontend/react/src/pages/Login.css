@@ -1,0 +1,89 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.Main_Container{
+    
+    display: flex;
+    justify-content: center;
+
+    
+}
+.Leftside{
+    background-color: rgb(106, 47, 161);
+    width:50%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    gap: 30px;
+    color: #fff;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+}
+.Rightside {
+    background-color: #f8f9fc;
+    width: 50%;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.LoginCard {
+    background: #fff;
+    width: 400px;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.LoginCard h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.LoginCard input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+}
+
+.LoginCard input:focus {
+    border-color: rgb(106, 47, 161);
+}
+
+.LoginCard button {
+    background: rgb(106, 47, 161);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.LoginCard button:hover {
+    background: rgb(87, 37, 134);
+}
+
+.SubTitle {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}

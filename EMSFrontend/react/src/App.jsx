@@ -1,25 +1,20 @@
-import {BrowserRoute, Routes, Route } from 'react-router-dom'
 
-import login from './pages/login';
-import dashboard from './pages/dashboard';
-import addEmployess from './pages/AddEmployees';
-import EditEmployees from './pages/EditEmployees'
-
-
-
-function App(){
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import AddEmployees from "./pages/AddEmployees";
+import EditEmployees from "./pages/EditEmployees";
+function App() {
   return (
-<BrowserRoute>
-<Routes>
-  <Route path = "/" element={<login />}/>
-  <Route path = "/dashboard" element={<dashboard/>}/>
-  <Route path = "/add" element = {<addEmployess/>}/>
-  <Route path = "/edit/:id" element={<EditEmployees/>}/>
-
-</Routes>
-</BrowserRoute>
-  )
-
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/add" element={<AddEmployees />} />
+        <Route path="/edit/:id" element={<EditEmployees />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
