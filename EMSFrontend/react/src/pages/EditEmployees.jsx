@@ -23,7 +23,7 @@ const EditEmployee = () => {
       const res = await Api.get(`/employees/${id}`);
 
       setFormData(res.data.employee[0]);
-
+      console.log(res.data)
     } catch (error) {
       console.log(error);
     }

@@ -9,199 +9,295 @@ import { useNavigate } from "react-router-dom";
 import Api from "../services/api";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  const [employees, setEmployees] = useState([]);
+const [employees, setEmployees] = useState([]);
+const [search, setSearch] = useState("");
+const [department, setDepartment] = useState("");
 
-  // Fetch Employees
-  const getEmployees = async () => {
-    try {
-      const res = await Api.get("/employees");
+const [currentPage, setCurrentPage] = useState(1);
+const employeesPerPage = 5;
 
-      setEmployees(res.data.employees);
+// Fetch Employees
+const getEmployees = async () => {
+try {
+const res = await Api.get("/employees");
+setEmployees(res.data.employees);
+} catch (error) {
+console.log(error);
+}
+};
 
-    } catch (error) {
-      console.log(error);
-    }
-  };
+useEffect(() => {
+getEmployees();
+}, []);
 
-  useEffect(() => {
-    getEmployees();
-  }, []);
+// Reset Page when Search or Filter Changes
+useEffect(() => {
+setCurrentPage(1);
+}, [search, department]);
 
-  // Delete Employee
-  const deleteEmployee = async (id) => {
-    try {
-      const confirmDelete = window.confirm(
-        "Are you sure you want to delete?"
-      );
+// Search + Filter
+const filteredEmployees = employees.filter((emp) => {
+const matchesSearch =
+emp.name.toLowerCase().includes(search.toLowerCase()) ||
+emp.email.toLowerCase().includes(search.toLowerCase()) ||
+emp.department.toLowerCase().includes(search.toLowerCase());
 
-      if (!confirmDelete) return;
 
-      await Api.delete(`/employees/${id}`);
+const matchesDepartment =
+  department === "" ||
+  emp.department === department;
 
-      alert("Employee Deleted");
+return matchesSearch && matchesDepartment;
 
-      getEmployees();
 
-    } catch (error) {
-      console.log(error);
-    }
-  };
+});
 
-  // Logout
-  const logout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
+// Pagination
+const lastIndex = currentPage * employeesPerPage;
+const firstIndex = lastIndex - employeesPerPage;
 
-  return (
-    <div className="dashboard-container">
+const currentEmployees = filteredEmployees.slice(
+firstIndex,
+lastIndex
+);
 
-      {/* Sidebar */}
-      <div className="sidebar">
+const totalPages = Math.ceil(
+filteredEmployees.length / employeesPerPage
+);
 
-        <h2 className="logo">EMS</h2>
+// Delete Employee
+const deleteEmployee = async (id) => {
+try {
+const confirmDelete = window.confirm(
+"Are you sure you want to delete?"
+);
 
-        <ul>
-          <li>
-            <p><MdDashboard /></p>
-            Dashboard
-          </li>
 
-          <li>
-            <p><IoPeopleSharp /></p>
-            Employees
-          </li>
+  if (!confirmDelete) return;
 
-          <li onClick={() => navigate("/add")}>
-            <p><FaPeopleArrows /></p>
-            Add Employee
-          </li>
+  await Api.delete(`/employees/${id}`);
 
-          <li onClick={logout}>
-            <p><TbLogout2 /></p>
-            Logout
-          </li>
-        </ul>
+  alert("Employee Deleted");
 
+  getEmployees();
+
+} catch (error) {
+  console.log(error);
+}
+
+
+};
+
+// Logout
+const logout = () => {
+localStorage.removeItem("token");
+navigate("/");
+};
+
+return ( <div className="dashboard-container">
+
+
+  {/* Sidebar */}
+  <div className="sidebar">
+    <h2 className="logo">EMS</h2>
+
+    <ul>
+      <li>
+        <p><MdDashboard /></p>
+        Dashboard
+      </li>
+
+      <li>
+        <p><IoPeopleSharp /></p>
+        Employees
+      </li>
+
+      <li onClick={() => navigate("/add")}>
+        <p><FaPeopleArrows /></p>
+        Add Employee
+      </li>
+
+      <li onClick={logout}>
+        <p><TbLogout2 /></p>
+        Logout
+      </li>
+    </ul>
+  </div>
+
+  {/* Main Content */}
+  <div className="main-content">
+
+    <div className="header">
+      <h1>Welcome Admin</h1>
+      <p>Manage your workforce efficiently</p>
+    </div>
+
+    {/* Search + Filter */}
+    <div className="search-filter-container">
+
+      <input
+        type="text"
+        placeholder="Search Employee..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <select
+        value={department}
+        onChange={(e) => setDepartment(e.target.value)}
+      >
+        <option value="">All Departments</option>
+        <option value="IT">IT</option>
+        <option value="HR">HR</option>
+        <option value="Finance">Finance</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Operations">Operations</option>
+      </select>
+
+    </div>
+
+    {/* Cards */}
+    <div className="cards">
+
+      <div className="card">
+        <h3>Total Employees</h3>
+        <h2>{employees.length}</h2>
       </div>
 
-      {/* Main Content */}
-      <div className="main-content">
+      <div className="card">
+        <h3>Departments</h3>
+        <h2>5</h2>
+      </div>
 
-        <div className="header">
-          <h1>Welcome Admin</h1>
-          <p>Manage your workforce efficiently</p>
-        </div>
+      <div className="card">
+        <h3>Admins</h3>
+        <h2>1</h2>
+      </div>
 
-        {/* Cards */}
-        <div className="cards">
+      <div className="card">
+        <h3>Status</h3>
+        <h2>Active</h2>
+      </div>
 
-          <div className="card">
-            <h3>Total Employees</h3>
-            <h2>{employees.length}</h2>
-          </div>
+    </div>
 
-          <div className="card">
-            <h3>Departments</h3>
-            <h2>5</h2>
-          </div>
+    {/* Table */}
+    <div className="table-container">
 
-          <div className="card">
-            <h3>Admins</h3>
-            <h2>1</h2>
-          </div>
+      <div className="table-header">
+        <h2>Employee List</h2>
 
-          <div className="card">
-            <h3>Status</h3>
-            <h2>Active</h2>
-          </div>
+        <button onClick={() => navigate("/add")}>
+          Add Employee
+        </button>
+      </div>
 
-        </div>
+      <table>
 
-        {/* Employee Table */}
-        <div className="table-container">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Salary</th>
+            <th>Action</th>
+          </tr>
+        </thead>
 
-          <div className="table-header">
-            <h2>Employee List</h2>
+        <tbody>
 
-            <button
-              onClick={() => navigate("/add")}
-            >
-              Add Employee
-            </button>
-          </div>
+          {currentEmployees.length > 0 ? (
 
-          <table>
+            currentEmployees.map((emp) => (
+              <tr key={emp.id}>
 
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Department</th>
-                <th>Salary</th>
-                <th>Action</th>
+                <td>{emp.id}</td>
+                <td>{emp.name}</td>
+                <td>{emp.email}</td>
+                <td>{emp.department}</td>
+                <td>₹{emp.salary}</td>
+
+                <td>
+
+                  <button
+                    className="edit-btn"
+                    onClick={() =>
+                      navigate(`/edit/${emp.id}`)
+                    }
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() =>
+                      deleteEmployee(emp.id)
+                    }
+                  >
+                    Delete
+                  </button>
+
+                </td>
+
               </tr>
-            </thead>
+            ))
 
-            <tbody>
+          ) : (
 
-              {employees.length > 0 ? (
+            <tr>
+              <td colSpan="6">
+                No Employees Found
+              </td>
+            </tr>
 
-                employees.map((emp) => (
-                  <tr key={emp.id}>
-                    <td>{emp.id}</td>
-                    <td>{emp.name}</td>
-                    <td>{emp.email}</td>
-                    <td>{emp.department}</td>
-                    <td>₹{emp.salary}</td>
+          )}
 
-                    <td>
+        </tbody>
 
-                      <button
-                        className="edit-btn"
-                        onClick={() =>
-                          navigate(`/edit/${emp.id}`)
-                        }
-                      >
-                        Edit
-                      </button>
+      </table>
 
-                      <button
-                        className="delete-btn"
-                        onClick={() =>
-                          deleteEmployee(emp.id)
-                        }
-                      >
-                        Delete
-                      </button>
+      {/* Pagination */}
 
-                    </td>
-                  </tr>
-                ))
+      <div className="pagination">
 
-              ) : (
+        <button
+          disabled={currentPage === 1}
+          onClick={() =>
+            setCurrentPage(currentPage - 1)
+          }
+        >
+          Prev
+        </button>
 
-                <tr>
-                  <td colSpan="6">
-                    No Employees Found
-                  </td>
-                </tr>
+        <span>
+          Page {currentPage} of {totalPages || 1}
+        </span>
 
-              )}
-
-            </tbody>
-
-          </table>
-
-        </div>
+        <button
+          disabled={
+            currentPage === totalPages ||
+            totalPages === 0
+          }
+          onClick={() =>
+            setCurrentPage(currentPage + 1)
+          }
+        >
+          Next
+        </button>
 
       </div>
 
     </div>
-  );
+
+  </div>
+
+</div>
+
+
+);
 };
 
 export default Dashboard;
