@@ -2,7 +2,7 @@ import "./EmployeeForm.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Api from "../services/api";
-
+import { toast } from "react-toastify";
 const EditEmployee = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -45,12 +45,12 @@ const EditEmployee = () => {
         formData
       );
 
-      alert("Employee Updated");
+     toast.success("Employee Updated Successfully")
       navigate("/dashboard");
 
     } catch (error) {
       console.log(error);
-      alert("Update Failed");
+      toast.error("Update Failed")
     }
   };
 

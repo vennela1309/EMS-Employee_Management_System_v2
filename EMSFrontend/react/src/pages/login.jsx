@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import Api from "../services/api";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -32,17 +33,17 @@ const Login = () => {
         res.data.token
       );
 
-      alert("Login Successful");
+      toast.success("Login Successful");
 
       navigate("/dashboard");
 
     } catch (error) {
       console.log(error);
 
-      alert(
-        error.response?.data?.message ||
-        "Login Failed"
-      );
+     toast.error(
+  error.response?.data?.message ||
+  "Login Failed"
+);
     }
   };
 
@@ -71,7 +72,7 @@ const Login = () => {
             Sign in to continue managing employees
           </p>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="login_form">
 
             <input
               type="email"

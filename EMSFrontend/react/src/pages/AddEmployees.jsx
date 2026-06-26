@@ -2,7 +2,7 @@ import "./EmployeeForm.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Api from "../services/api";
-
+import { toast } from "react-toastify";
 const AddEmployee = () => {
   const navigate = useNavigate();
 
@@ -26,12 +26,12 @@ const AddEmployee = () => {
     try {
       await Api.post("/employees", formData);
 
-      alert("Employee Added Successfully");
+      toast.success("Employee Added Successfully");
       navigate("/dashboard");
 
     } catch (error) {
       console.log(error);
-      alert("Failed to Add Employee");
+      toast.error("Unable to Add Employee");
     }
   };
 

@@ -3,7 +3,7 @@ import { MdDashboard } from "react-icons/md";
 import { IoPeopleSharp } from "react-icons/io5";
 import { FaPeopleArrows } from "react-icons/fa";
 import { TbLogout2 } from "react-icons/tb";
-
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Api from "../services/api";
@@ -79,7 +79,7 @@ const confirmDelete = window.confirm(
 
   await Api.delete(`/employees/${id}`);
 
-  alert("Employee Deleted");
+ toast.success("Employee Deleted Successfully");
 
   getEmployees();
 
@@ -93,7 +93,12 @@ const confirmDelete = window.confirm(
 // Logout
 const logout = () => {
 localStorage.removeItem("token");
-navigate("/");
+
+toast.success("Logged Out Successfully");
+
+setTimeout(() => {
+  navigate("/");
+}, 1000);
 };
 
 return ( <div className="dashboard-container">
